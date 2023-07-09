@@ -38,11 +38,10 @@ func SetupConfig(l log.Logger, path string) *viper.Viper {
 		}
 	}
 
-	for key, c := range v.AllSettings() {
-		if value, ok := c.(string); ok {
-			if value != "" && strings.HasPrefix(value, ENV_KEY_PREFIX) {
-				v.Set(key, os.Getenv(value[len(ENV_KEY_PREFIX):]))
-			}
+	for _, key := range v.AllKeys() {
+		value := v.GetString(key)
+		if value != "" && strings.HasPrefix(value, ENV_KEY_PREFIX) {
+			v.Set(key, os.Getenv(value[len(ENV_KEY_PREFIX):]))
 		}
 	}
 
