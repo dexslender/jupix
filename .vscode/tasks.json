@@ -45,7 +45,6 @@
                 "id": "play",
                 "color": "terminal.ansiGreen"
             },
-            "dependsOn": "Build Bot",
             "problemMatcher": []
         }
     ]
