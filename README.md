@@ -1,2 +1,2 @@
 # plane
-The discord bot for my server in Go powerer by disgo
+The discord bot for my server in Go powered by disgo
