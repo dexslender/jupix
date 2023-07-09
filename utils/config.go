@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-const ENV_KEY_PREFIX = "env:"
+const ENVVAR_PREFIX = "env:"
 
 func SetupConfig(l log.Logger, path string) *viper.Viper {
 	v := viper.NewWithOptions(
@@ -39,9 +39,14 @@ func SetupConfig(l log.Logger, path string) *viper.Viper {
 	}
 
 	for _, key := range v.AllKeys() {
-		value := v.GetString(key)
-		if value != "" && strings.HasPrefix(value, ENV_KEY_PREFIX) {
-			v.Set(key, os.Getenv(value[len(ENV_KEY_PREFIX):]))
+		if value := v.GetString(key); value != "" && strings.HasPrefix(
+			value,
+			ENVVAR_PREFIX,
+		) {
+			v.Set(
+				key,
+				os.Getenv(value[len(ENVVAR_PREFIX):]),
+			)
 		}
 	}
 
