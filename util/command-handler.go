@@ -56,7 +56,9 @@ func (h *Handler) OnEvent(event bot.Event) {
 				},
 			}
 
-			c.Run(ctx)
+			if err := c.Run(ctx); err != nil {
+				h.Log.Error("Handler error catched: ", err)
+			}
 		}
 
 		// case discord.AutocompleteInteraction:
