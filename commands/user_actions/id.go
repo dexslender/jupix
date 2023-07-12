@@ -1,7 +1,7 @@
 package useractions
 
 import (
-	"github.com/dexslender/plane/utils"
+	"github.com/dexslender/plane/util"
 	"github.com/disgoorg/disgo/discord"
 )
 
@@ -13,6 +13,15 @@ func (c *GetUserId) Init() {
 	c.Name = "Get ID"
 }
 
-func (c *GetUserId) Run(ctx utils.CommandCtx) error {
-	return ctx.CreateMessage(discord.MessageCreate{Content: ctx.User().ID.String()})
+func (c *GetUserId) Run(ctx util.CommandCtx) error {
+	return ctx.CreateMessage(discord.NewMessageCreateBuilder().
+		SetEphemeral(true).
+		SetContentf(
+			"%s%s%s",
+			util.ITALICS+util.CODESTRING,
+			ctx.User().ID.String(),
+			util.CODESTRING+util.ITALICS,
+		).
+		Build(),
+	)
 }

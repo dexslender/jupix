@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/dexslender/plane/util"
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/gateway"
@@ -27,12 +28,17 @@ func New(l log.Logger, c *viper.Viper) *Plane {
 
 type Plane struct {
 	bot.Client
-	Config *viper.Viper
-	Log    log.Logger
+	Config  *viper.Viper
+	Log     log.Logger
+	Handler *util.Handler
 }
 
 func (p *Plane) SetupBot() {
 	var err error
+
+	p.Handler = util.NewHandler().
+		WithLogger(p.Log)
+
 	if p.Client, err = disgo.New(
 		p.Config.GetString("bot~token"),
 		bot.WithGatewayConfigOpts(
@@ -45,7 +51,7 @@ func (p *Plane) SetupBot() {
 			gateway.WithIntents(gateway.IntentsNonPrivileged),
 		),
 		bot.WithLogger(p.Log),
-		bot.WithEventListeners(listeners),
+		bot.WithEventListeners(listeners, p.Handler),
 	); err != nil {
 		p.Log.Fatal("Client error: ", err)
 	}

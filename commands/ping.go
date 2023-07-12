@@ -1,11 +1,9 @@
 package commands
 
 import (
-	"github.com/dexslender/plane/utils"
+	"github.com/dexslender/plane/util"
 	"github.com/disgoorg/disgo/discord"
 )
-
-var _ utils.Command = (*Ping)(nil)
 
 type Ping struct {
 	discord.SlashCommandCreate
@@ -16,6 +14,11 @@ func (c *Ping) Init() {
 	c.Description = "Latency of the bot"
 }
 
-func (c *Ping) Run(ctx utils.CommandCtx) error {
-	return ctx.CreateMessage(discord.MessageCreate{Content: "Hello!"})
+func (c *Ping) Run(ctx util.CommandCtx) error {
+	return ctx.CreateMessage(discord.NewMessageCreateBuilder().
+		SetEmbeds(discord.NewEmbedBuilder().
+			Build(),
+		).
+		Build(),
+	)
 }
