@@ -23,7 +23,7 @@ func (c *Ping) Run(ctx util.CommandCtx) error {
 	}
 	d := time.Since(s)
 
-	return ctx.CreateMessage(discord.NewMessageCreateBuilder().
+	_, err := ctx.UpdateInteractionResponse(discord.NewMessageUpdateBuilder().
 		SetEmbeds(discord.NewEmbedBuilder().
 			SetColor(util.DDark).
 			SetAuthorName("Pong!").
@@ -41,4 +41,5 @@ func (c *Ping) Run(ctx util.CommandCtx) error {
 		).
 		Build(),
 	)
+	return err
 }
