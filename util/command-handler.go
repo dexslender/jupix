@@ -112,7 +112,7 @@ func (h *Handler) SetupCommands(c bot.Client, guildId snowflake.ID, commands []C
 		guildId,
 		cmds,
 	); err != nil {
-		h.Log.Error("Error in command setup: ", err)
+		h.Log.Error("Error in commands setup: ", err)
 	} else {
 		h.Log.Infof("Registered %d commands", len(reg))
 	}
