@@ -58,15 +58,6 @@ type Handler struct {
 	commands map[string]Command
 }
 
-/*
-For example propourses
-ApplicationCommandInteractionCreate: &events.ApplicationCommandInteractionCreate{
-	GenericEvent:                  event.GenericEvent,
-	ApplicationCommandInteraction: event.Interaction.(discord.ApplicationCommandInteraction),
-	Respond:                       event.Respond,
-}
-*/
-
 func (h *Handler) OnEvent(event bot.Event) {
 	e, ok := event.(*events.InteractionCreate)
 	if !ok {
@@ -125,4 +116,8 @@ func (h *Handler) SetupCommands(c bot.Client, guildId snowflake.ID, commands []C
 	} else {
 		h.Log.Infof("Registered %d commands", len(reg))
 	}
+}
+
+func (h *Handler) Component() {
+
 }
