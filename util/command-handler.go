@@ -17,6 +17,7 @@ type Command interface {
 
 type CommandCtx struct {
 	events.ApplicationCommandInteractionCreate
+	Config *Config
 }
 
 func (e *CommandCtx) GetInteractionResponse(opts ...rest.RequestOpt) (*discord.Message, error) {
@@ -55,6 +56,7 @@ func NewHandler() *Handler {
 
 type Handler struct {
 	Log      log.Logger
+	Config   *Config
 	commands map[string]Command
 }
 
@@ -74,6 +76,7 @@ func (h *Handler) OnEvent(event bot.Event) {
 					ApplicationCommandInteraction: e.Interaction.(discord.ApplicationCommandInteraction),
 					Respond:                       e.Respond,
 				},
+				h.Config,
 			}
 
 			if err := c.Run(ctx); err != nil {
@@ -91,6 +94,11 @@ func (h *Handler) OnEvent(event bot.Event) {
 
 func (h *Handler) WithLogger(l log.Logger) *Handler {
 	h.Log = l
+	return h
+}
+
+func (h *Handler) WithConfig(c *Config) *Handler {
+	h.Config = c
 	return h
 }
 

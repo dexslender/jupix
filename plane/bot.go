@@ -12,12 +12,11 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/gateway"
 	"github.com/disgoorg/log"
-	"github.com/spf13/viper"
 )
 
 var _p Plane
 
-func New(l log.Logger, c *viper.Viper) *Plane {
+func New(l log.Logger, c util.Config) *Plane {
 	_p = Plane{
 		Config: c,
 		Log:    l,
@@ -28,7 +27,7 @@ func New(l log.Logger, c *viper.Viper) *Plane {
 
 type Plane struct {
 	bot.Client
-	Config  *viper.Viper
+	Config  util.Config
 	Log     log.Logger
 	Handler *util.Handler
 }
@@ -40,10 +39,10 @@ func (p *Plane) SetupBot() {
 		WithLogger(p.Log)
 
 	if p.Client, err = disgo.New(
-		p.Config.GetString("bot~token"),
+		p.Config.Bot.Token,
 		bot.WithGatewayConfigOpts(
 			func(cfg *gateway.Config) {
-				if p.Config.GetBool("bot~mobile-os") {
+				if p.Config.Bot.MobileOs {
 					cfg.Browser = "Discord Android"
 				}
 			},

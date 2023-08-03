@@ -5,13 +5,12 @@ import (
 	"github.com/dexslender/plane/plane"
 	"github.com/dexslender/plane/util"
 	"github.com/disgoorg/log"
-	"github.com/disgoorg/snowflake/v2"
 )
 
 func main() {
 	l := log.New(log.Ltime | log.Lshortfile)
-	c := util.SetupConfig(l, ".")
-	if c.GetBool("debug-log-level") {
+	c := util.LoadConfig(l, "botconfig.yml")
+	if c.Config.LogDebug {
 		l.SetLevel(log.LevelDebug)
 	}
 
@@ -19,10 +18,10 @@ func main() {
 
 	p.SetupBot()
 
-	if c.GetBool("bot~setup-commands") {
+	if c.Bot.SetupCommands {
 		p.Handler.SetupCommands(
 			p.Client,
-			snowflake.ID(c.GetInt("bot~guild-id")),
+			c.Bot.GuildId,
 			commands.Commands,
 		)
 	}

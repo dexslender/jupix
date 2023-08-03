@@ -4,6 +4,7 @@ import (
 	"github.com/dexslender/plane/util"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/json"
+	"github.com/disgoorg/snowflake/v2"
 )
 
 type FixCMD struct {
@@ -31,5 +32,29 @@ func (c *FixCMD) Init() {
 }
 
 func (c *FixCMD) Run(ctx util.CommandCtx) error {
-	return nil
+	opt := ctx.SlashCommandInteractionData().String("target")
+	switch opt {
+	case "rol-members":
+		if err := ctx.DeferCreateMessage(false); err != nil {
+			return err
+		}
+		go func(ctx util.CommandCtx) {
+			var mc int
+			if g, err := ctx.Client().Rest().GetGuild(snowflake.ID(ctx.Config.Bot.GuildId), true); err != nil {
+				mc = g.MemberCount
+			}
+			ctx.Client().Rest().GetMembers(
+				snowflake.ID(ctx.Config.Bot.GuildId),
+				mc,
+				0,
+			)
+		}(ctx)
+		return nil
+	default:
+		return ctx.CreateMessage(discord.NewMessageCreateBuilder().
+			SetEphemeral(true).
+			SetContent("Unknown option").
+			Build(),
+		)
+	}
 }
