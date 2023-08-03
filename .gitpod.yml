@@ -4,8 +4,13 @@
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
-tasks:
-  - init: go get && go build ./cmd -o bin/plane
-    command: ./bin/plane
+image: golang:1.20.7
 
+# tasks:
+#   - name: Install & Build
+#     before: go build -o bin/plane ./cmd
+#     init: go get
 
+vscode:
+  extensions:
+    - golang.go
