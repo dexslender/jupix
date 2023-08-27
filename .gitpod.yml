@@ -4,12 +4,11 @@
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
-image: golang:1.20.7
+image: golang:1.20
 
-# tasks:
-#   - name: Install & Build
-#     before: go build -o bin/plane ./cmd
-#     init: go get
+tasks:
+  - name: Go
+    init: echo Hello world
 
 vscode:
   extensions:
