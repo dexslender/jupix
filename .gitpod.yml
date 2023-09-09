@@ -4,11 +4,13 @@
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
-image: golang:1.20
+image: golang:latest
 
 tasks:
-  - name: Go
-    init: echo Hello world
+  - name: Go startup
+    init: go get ./...
+
+# workspaceLocation: '.'
 
 vscode:
   extensions:

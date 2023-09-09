@@ -11,13 +11,13 @@ import (
 )
 
 var DEFAULT_CONTENT = `
-	bot
+	bot:
 		token: your-token-here
 		setup-commands: false
 		global-commands: false
 		guild-id: 0
 		mobile-os: false
-	config
+	config:
 		log-debug: false
 `
 
