@@ -7,8 +7,8 @@
 image: golang:latest
 
 tasks:
-  - name: Go startup
-    init: go get ./...
+  - name: Go setup
+    init: go get -v ./...
 
 # workspaceLocation: '.'
 
