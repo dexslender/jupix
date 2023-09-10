@@ -9,8 +9,8 @@ import (
 
 func main() {
 	l := log.New(log.Ltime | log.Lshortfile)
-	c := util.LoadConfig(l, "botconfig.yml")
-	if c.Config.LogDebug {
+	c := util.LoadConfig(l, "botconfig.yaml")
+	if c.Runtime.DebugLog {
 		l.SetLevel(log.LevelDebug)
 	}
 

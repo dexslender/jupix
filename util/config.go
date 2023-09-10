@@ -4,51 +4,71 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
+	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/log"
 	"github.com/disgoorg/snowflake/v2"
 	"github.com/kkyr/fig"
 )
 
-var DEFAULT_CONTENT = `
-	bot:
-		token: your-token-here
-		setup-commands: false
-		global-commands: false
-		guild-id: 0
-		mobile-os: false
-	config:
-		log-debug: false
+const DEFAULT_CONTENT = `
+bot:
+  guild: 0
+  setup-commands: false
+  global-commands: false
+  use-mobile-os: true
+  presence-interval: 20s
+
+runtime:
+  debug-log: false
+
+presences:
+  - name: discord
+    status: online
+
+  # - name: 
+  #   type:
+  #   status:
+  #   url:
 `
 
 type Config struct {
 	Bot struct {
-		Token          string       `validate:"required"`
-		SetupCommands  bool         `fig:"setup-commands" default:"false"`
-		GlobalCommands bool         `fig:"global-commands" default:"false"`
-		GuildId        snowflake.ID `fig:"guild-id"`
-		MobileOs       bool         `fig:"mobile-os" default:"false"`
+		Token            string        `validate:"required"`
+		GuildId          snowflake.ID  `fig:"guild" default:"0"`
+		SetupCommands    bool          `fig:"setup-commands"`
+		GlobalCommands   bool          `fig:"global-commands"`
+		MobileOs         bool          `fig:"use-mobile-os"`
+		PresenceInterval time.Duration `fig:"presence-interval" default:"10s"`
 	}
-	Config struct {
-		LogDebug bool `fig:"log-debug" default:"false"`
+	Runtime struct {
+		DebugLog bool `fig:"debug-log"`
 	}
+	Presences []Presence
 }
 
-func LoadConfig(l log.Logger, filename string) (cfg Config) {
-	if err := fig.Load(
-		&cfg,
-		fig.File(filename),
-		// fig.UseEnv("PLANE"),
-	); err != nil {
-		if errors.Is(err, error(fig.ErrFileNotFound)) {
-			l.Infof("Config file not found!")
-			l.Infof("Config file not found creating in '%s'", fig.DefaultDir)
+type Presence struct {
+	Status discord.OnlineStatus
+	Name   string
+	Type   string
+	URL    string
+}
 
+func LoadConfig(l log.Logger, filename string) (config Config) {
+	err := fig.Load(
+		&config,
+		fig.UseEnv("JUPIX"),
+		fig.File(filename),
+	)
+	if err != nil {
+		if errors.Is(err, fig.ErrFileNotFound) {
+			l.Infof("Config file not found, creating in '%s'", fig.DefaultDir)
 			if err := WriteConfig(filename); err != nil {
-				log.Errorf("Error while writting config file: ", err)
+				log.Error("Error while written config file: ", err)
 			}
 		} else {
-			l.Fatal("Config reader error: ", err)
+			l.Fatal("Config error: ", err)
 		}
 	}
 	return
