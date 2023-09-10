@@ -4,7 +4,6 @@ import (
 	"github.com/dexslender/plane/util"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/json"
-	"github.com/disgoorg/snowflake/v2"
 )
 
 type FixCMD struct {
@@ -31,20 +30,20 @@ func (c *FixCMD) Init() {
 	}
 }
 
-func (c *FixCMD) Run(ctx util.CommandCtx) error {
+func (c *FixCMD) Run(ctx *util.JContext) error {
 	opt := ctx.SlashCommandInteractionData().String("target")
 	switch opt {
 	case "rol-members":
 		if err := ctx.DeferCreateMessage(false); err != nil {
 			return err
 		}
-		go func(ctx util.CommandCtx) {
+		go func(ctx *util.JContext) {
 			var mc int
-			if g, err := ctx.Client().Rest().GetGuild(snowflake.ID(ctx.Config.Bot.GuildId), true); err != nil {
+			if g, err := ctx.Client().Rest().GetGuild(*ctx.GuildID(), true); err != nil {
 				mc = g.MemberCount
 			}
 			ctx.Client().Rest().GetMembers(
-				snowflake.ID(ctx.Config.Bot.GuildId),
+				*ctx.GuildID(),
 				mc,
 				0,
 			)

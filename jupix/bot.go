@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/dexslender/plane/commands"
 	"github.com/dexslender/plane/util"
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
@@ -28,7 +29,7 @@ type Jupix struct {
 	bot.Client
 	Config    util.Config
 	Log       log.Logger
-	Handler   *util.Handler
+	Handler   *util.JIHandler
 	Presences util.PUpdater
 }
 
@@ -36,17 +37,19 @@ func (j *Jupix) SetupBot() {
 	var err error
 
 	j.Presences = util.PUpdater{
-		Conf: &j.Config,
+		Conf: j.Config,
+		Log:  j.Log,
 	}
 
 	j.Handler = util.NewHandler().
-		WithLogger(j.Log)
+		WithLogger(j.Log).
+		WithConfig(j.Config)
 
 	if j.Client, err = disgo.New(
 		j.Config.Bot.Token,
 		bot.WithGatewayConfigOpts(
 			func(cfg *gateway.Config) {
-				if len(j.Config.Presences) >= 0 {
+				if len(j.Config.Presences) >= 1 {
 					cfg.Presence = j.Presences.Next()
 				}
 				if j.Config.Bot.MobileOs {
@@ -61,6 +64,8 @@ func (j *Jupix) SetupBot() {
 	); err != nil {
 		j.Log.Fatal("Client error: ", err)
 	}
+
+	j.Handler.SetupCommands(j.Client, commands.Commands)
 }
 
 func (j *Jupix) StartNLock() {

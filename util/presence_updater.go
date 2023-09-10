@@ -11,7 +11,7 @@ import (
 )
 
 type PUpdater struct {
-	Conf    *Config
+	Conf    Config
 	Log     log.Logger
 	current int
 }

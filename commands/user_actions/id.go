@@ -13,7 +13,7 @@ func (c *GetUserId) Init() {
 	c.Name = "Get ID"
 }
 
-func (c *GetUserId) Run(ctx util.CommandCtx) error {
+func (c *GetUserId) Run(ctx *util.JContext) error {
 	return ctx.CreateMessage(discord.NewMessageCreateBuilder().
 		SetEphemeral(true).
 		SetContentf(

@@ -5,7 +5,7 @@ import (
 	"github.com/dexslender/plane/util"
 )
 
-var Commands = []util.Command{
+var Commands = []util.JCommand{
 	new(Ping),
 	new(useractions.GetUserId),
 }

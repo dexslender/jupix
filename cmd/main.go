@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/dexslender/plane/commands"
 	"github.com/dexslender/plane/jupix"
 	"github.com/dexslender/plane/util"
 	"github.com/disgoorg/log"
@@ -17,14 +16,6 @@ func main() {
 	p := jupix.New(l, c)
 
 	p.SetupBot()
-
-	if c.Bot.SetupCommands {
-		p.Handler.SetupCommands(
-			p.Client,
-			c.Bot.GuildId,
-			commands.Commands,
-		)
-	}
 
 	p.StartNLock()
 }

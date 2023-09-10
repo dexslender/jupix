@@ -16,7 +16,7 @@ func (c *Ping) Init() {
 	c.Description = "Latency of the bot"
 }
 
-func (c *Ping) Run(ctx util.CommandCtx) error {
+func (c *Ping) Run(ctx *util.JContext) error {
 	s := time.Now()
 	if err := ctx.DeferCreateMessage(false); err != nil {
 		return err
