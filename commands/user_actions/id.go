@@ -18,9 +18,9 @@ func (c *GetUserId) Run(ctx util.CommandCtx) error {
 		SetEphemeral(true).
 		SetContentf(
 			"%s%s%s",
-			util.ITALICS+util.CODESTRING,
+			"_`",
 			ctx.User().ID.String(),
-			util.CODESTRING+util.ITALICS,
+			"`_",
 		).
 		Build(),
 	)

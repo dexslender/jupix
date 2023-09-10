@@ -1,12 +1,18 @@
 package util
 
 import (
+	"context"
+	"time"
+
+	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/gateway"
+	"github.com/disgoorg/log"
 )
 
 type PUpdater struct {
 	Conf    *Config
+	Log     log.Logger
 	current int
 }
 
@@ -29,15 +35,15 @@ func ResolvePresence(p Presence) *gateway.MessageDataPresenceUpdate {
 	}
 
 	switch p.Type {
-	case "watching":
+	case "watching", "watch":
 		activity.Type = discord.ActivityTypeWatching
-	case "listening":
+	case "listening", "listen":
 		activity.Type = discord.ActivityTypeListening
 	case "game", "playing":
 		activity.Type = discord.ActivityTypeGame
 	case "competing":
 		activity.Type = discord.ActivityTypeCompeting
-	case "streaming":
+	case "streaming", "stream":
 		activity.Type = discord.ActivityTypeStreaming
 	default:
 		activity.Type = discord.ActivityTypeGame
@@ -50,6 +56,19 @@ func ResolvePresence(p Presence) *gateway.MessageDataPresenceUpdate {
 	return &gateway.MessageDataPresenceUpdate{
 		Status:     status,
 		Activities: []discord.Activity{activity},
+	}
+}
+
+func (pu *PUpdater) InitUpdater(c bot.Client) {
+	ticker := time.NewTicker(pu.Conf.Bot.PresenceInterval)
+	for range ticker.C {
+		pu.Log.Debug("Updating presence...")
+		act := pu.Next()
+		c.Gateway().Presence().Activities = act.Activities
+		c.Gateway().Presence().Status = act.Status
+		if err := c.SetPresence(context.Background()); err != nil {
+			pu.Log.Error("Error in presence handler: ", err)
+		}
 	}
 }
 
