@@ -1,4 +1,4 @@
-package plane
+package jupix
 
 import (
 	"github.com/disgoorg/disgo/events"
@@ -6,6 +6,6 @@ import (
 
 var listeners = &events.ListenerAdapter{
 	OnReady: func(event *events.Ready) {
-		_p.Log.Infof("Logged in as '@%s'", event.User.Username)
+		jx.Log.Infof("Logged in as '@%s'", event.User.Username)
 	},
 }

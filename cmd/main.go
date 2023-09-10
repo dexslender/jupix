@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/dexslender/plane/commands"
-	"github.com/dexslender/plane/plane"
+	"github.com/dexslender/plane/jupix"
 	"github.com/dexslender/plane/util"
 	"github.com/disgoorg/log"
 )
@@ -14,7 +14,7 @@ func main() {
 		l.SetLevel(log.LevelDebug)
 	}
 
-	p := plane.New(l, c)
+	p := jupix.New(l, c)
 
 	p.SetupBot()
 

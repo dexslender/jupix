@@ -1,4 +1,4 @@
-package plane
+package jupix
 
 import (
 	"context"
@@ -14,25 +14,25 @@ import (
 	"github.com/disgoorg/log"
 )
 
-var _p Plane
+var jx Jupix
 
-func New(l log.Logger, c util.Config) *Plane {
-	_p = Plane{
+func New(l log.Logger, c util.Config) *Jupix {
+	jx = Jupix{
 		Config: c,
 		Log:    l,
 	}
 
-	return &_p
+	return &jx
 }
 
-type Plane struct {
+type Jupix struct {
 	bot.Client
 	Config  util.Config
 	Log     log.Logger
 	Handler *util.Handler
 }
 
-func (p *Plane) SetupBot() {
+func (p *Jupix) SetupBot() {
 	var err error
 
 	p.Handler = util.NewHandler().
@@ -56,7 +56,7 @@ func (p *Plane) SetupBot() {
 	}
 }
 
-func (p *Plane) StartNLock() {
+func (p *Jupix) StartNLock() {
 	ctx, c := context.WithTimeout(context.Background(), time.Second*10)
 	defer c()
 
