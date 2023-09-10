@@ -27,9 +27,10 @@ func New(l log.Logger, c util.Config) *Jupix {
 
 type Jupix struct {
 	bot.Client
-	Config  util.Config
-	Log     log.Logger
-	Handler *util.Handler
+	Config    util.Config
+	Log       log.Logger
+	Handler   *util.Handler
+	Presences util.PUpdater
 }
 
 func (p *Jupix) SetupBot() {
