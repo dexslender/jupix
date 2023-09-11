@@ -31,6 +31,9 @@ func ResolvePresence(p Presence) *gateway.MessageDataPresenceUpdate {
 	}
 	if p.State != "" {
 		activity.State = &p.State
+		if activity.Name == "" {
+			activity.Name = p.State
+		}
 	}
 
 	if p.Status == "" {
