@@ -31,6 +31,7 @@ presences:
   #   type:
   #   status:
   #   url:
+  #	  state:
 `
 
 type Config struct {
@@ -53,6 +54,7 @@ type Presence struct {
 	Name   string
 	Type   string
 	URL    string
+	State  string
 }
 
 func LoadConfig(l log.Logger, filename string) (config Config) {

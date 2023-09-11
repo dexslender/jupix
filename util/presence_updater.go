@@ -22,10 +22,15 @@ func ResolvePresence(p Presence) *gateway.MessageDataPresenceUpdate {
 		activity discord.Activity
 	)
 
-	if p.Name == "" {
+	if p.Name == "" && p.State == "" {
 		return nil
-	} else {
+	}
+
+	if p.Name != "" {
 		activity.Name = p.Name
+	}
+	if p.State != "" {
+		activity.State = &p.State
 	}
 
 	if p.Status == "" {
@@ -45,6 +50,8 @@ func ResolvePresence(p Presence) *gateway.MessageDataPresenceUpdate {
 		activity.Type = discord.ActivityTypeCompeting
 	case "streaming", "stream":
 		activity.Type = discord.ActivityTypeStreaming
+	case "custom":
+		activity.Type = discord.ActivityTypeCustom
 	default:
 		activity.Type = discord.ActivityTypeGame
 	}
@@ -63,9 +70,12 @@ func (pu *PUpdater) InitUpdater(c bot.Client) {
 	ticker := time.NewTicker(pu.Conf.Bot.PresenceInterval)
 	for range ticker.C {
 		pu.Log.Debug("Updating presence...")
-		act := pu.Next()
-		c.Gateway().Presence().Activities = act.Activities
-		c.Gateway().Presence().Status = act.Status
+		presence := pu.Next()
+		if presence == nil {
+			continue
+		}
+		c.Gateway().Presence().Activities = presence.Activities
+		c.Gateway().Presence().Status = presence.Status
 		if err := c.SetPresence(context.Background()); err != nil {
 			pu.Log.Error("Error in presence handler: ", err)
 		}
