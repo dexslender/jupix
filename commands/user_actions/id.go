@@ -1,7 +1,7 @@
 package useractions
 
 import (
-	"github.com/dexslender/plane/util"
+	"github.com/dexslender/jupix/util"
 	"github.com/disgoorg/disgo/discord"
 )
 
@@ -17,10 +17,10 @@ func (c *GetUserId) Run(ctx *util.JContext) error {
 	return ctx.CreateMessage(discord.NewMessageCreateBuilder().
 		SetEphemeral(true).
 		SetContentf(
-			"%s%s%s",
-			"_`",
+			"%s\n%s%s",
+			"```go",
 			ctx.User().ID.String(),
-			"`_",
+			"```",
 		).
 		Build(),
 	)

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/dexslender/plane/jupix"
-	"github.com/dexslender/plane/util"
+	"github.com/dexslender/jupix/jupix"
+	"github.com/dexslender/jupix/util"
 	"github.com/disgoorg/log"
 )
 

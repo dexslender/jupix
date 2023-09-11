@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"github.com/dexslender/plane/util"
+	"github.com/dexslender/jupix/util"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/json"
 )

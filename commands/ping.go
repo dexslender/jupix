@@ -3,7 +3,7 @@ package commands
 import (
 	"time"
 
-	"github.com/dexslender/plane/util"
+	"github.com/dexslender/jupix/util"
 	"github.com/disgoorg/disgo/discord"
 )
 
@@ -22,7 +22,6 @@ func (c *Ping) Run(ctx *util.JContext) error {
 		return err
 	}
 	d := time.Since(s)
-
 	_, err := ctx.UpdateInteractionResponse(discord.NewMessageUpdateBuilder().
 		SetEmbeds(discord.NewEmbedBuilder().
 			SetColor(util.DDark).

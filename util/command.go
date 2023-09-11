@@ -10,8 +10,8 @@ import (
 type JCommand interface {
 	discord.ApplicationCommandCreate
 	Init()
-	// Before(ctx *JContext) bool
 	Run(ctx *JContext) error
+	// Before(ctx *JContext) bool
 	// RunError(ctx *JContext, err error)
 	// After(ctx *JContext)
 }

@@ -7,8 +7,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/dexslender/plane/commands"
-	"github.com/dexslender/plane/util"
+	"github.com/dexslender/jupix/commands"
+	"github.com/dexslender/jupix/util"
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/gateway"
