@@ -4,6 +4,7 @@ import (
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/disgo/rest"
+	"github.com/disgoorg/log"
 	"github.com/disgoorg/snowflake/v2"
 )
 
@@ -11,13 +12,12 @@ type JCommand interface {
 	discord.ApplicationCommandCreate
 	Init()
 	Run(ctx *JContext) error
-	// Before(ctx *JContext) bool
-	// RunError(ctx *JContext, err error)
-	// After(ctx *JContext)
+	// Error(ctx *JContext, err error)
 }
 
 type JContext struct {
 	events.ApplicationCommandInteractionCreate
+	Log log.Logger
 }
 
 func (e *JContext) GetInteractionResponse(opts ...rest.RequestOpt) (*discord.Message, error) {

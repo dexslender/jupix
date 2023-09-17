@@ -42,3 +42,7 @@ func (c *Ping) Run(ctx *util.JContext) error {
 	)
 	return err
 }
+
+func (t *Ping) Error(ctx *util.JContext, err error) {
+	
+}

@@ -25,3 +25,7 @@ func (c *GetUserId) Run(ctx *util.JContext) error {
 		Build(),
 	)
 }
+
+func (t *GetUserId) Error(ctx *util.JContext, err error) {
+
+}

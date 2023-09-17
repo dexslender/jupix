@@ -41,7 +41,7 @@ func (j *Jupix) SetupBot() {
 		Log:  j.Log,
 	}
 
-	j.Handler = util.NewHandler().
+	j.Handler = util.NewIHandler().
 		WithLogger(j.Log).
 		WithConfig(j.Config)
 
@@ -57,7 +57,10 @@ func (j *Jupix) SetupBot() {
 				}
 			},
 			gateway.WithCompress(true),
-			gateway.WithIntents(gateway.IntentsNonPrivileged),
+			gateway.WithIntents(
+				gateway.IntentsNonPrivileged|
+					gateway.IntentGuildMembers,
+			),
 		),
 		bot.WithLogger(j.Log),
 		bot.WithEventListeners(listeners, j.Handler),

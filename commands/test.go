@@ -5,18 +5,12 @@ import (
 	"github.com/disgoorg/disgo/discord"
 )
 
-type TestCommand struct {
-	discord.SlashCommandCreate
+type CommandTest struct {
+	discord.ApplicationCommandCreate
 }
 
-func (t *TestCommand) Init() {
-	panic("not implemented") // TODO: Implement
+func (c *CommandTest) Init() {}
+func (c *CommandTest) Run(ctx *util.JContext) error {
+	return nil
 }
-
-// Before(ctx *JContext) bool
-// RunError(ctx *JContext, err error)
-// After(ctx *JContext)
-func (t *TestCommand) Run(ctx *util.JContext) error {
-	panic("not implemented") // TODO: Implement
-}
-
+func (c *CommandTest) Error(ctx *util.JContext, err error) {}

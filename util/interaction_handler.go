@@ -7,7 +7,7 @@ import (
 	"github.com/disgoorg/log"
 )
 
-func NewHandler() *JIHandler {
+func NewIHandler() *JIHandler {
 	return &JIHandler{
 		commands: make(map[string]JCommand),
 	}
@@ -35,8 +35,8 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 					ApplicationCommandInteraction: e.Interaction.(discord.ApplicationCommandInteraction),
 					Respond:                       e.Respond,
 				},
+				h.Log,
 			}
-
 			if err := c.Run(ctx); err != nil {
 				h.Log.Error("Handler error catched: ", err)
 			}
