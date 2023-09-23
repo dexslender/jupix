@@ -18,35 +18,40 @@ bot:
   setup-commands: false
   global-commands: false
   use-mobile-os: true
-  presence-interval: 20s
 
 runtime:
   debug-log: false
 
-presences:
-  - name: discord
-    status: online
+presence-updater:
+  multi-presence: false
+  presence-interval: 10s
+  presences:
+    - state: Online now!
+      status: online
 
-  # - name:
-  #   type:
-  #   status:
-  #   url:
-  #   state:
+    # - name:
+    #   type:
+    #   status:
+    #   url:
+    #   state:
 `
 
 type Config struct {
 	Bot struct {
-		Token            string        `validate:"required"`
-		GuildId          snowflake.ID  `fig:"guild" default:"0"`
-		SetupCommands    bool          `fig:"setup-commands"`
-		GlobalCommands   bool          `fig:"global-commands"`
-		MobileOs         bool          `fig:"use-mobile-os"`
-		PresenceInterval time.Duration `fig:"presence-interval" default:"10s"`
+		Token          string       `validate:"required"`
+		GuildId        snowflake.ID `fig:"guild" default:"0"`
+		SetupCommands  bool         `fig:"setup-commands"`
+		GlobalCommands bool         `fig:"global-commands"`
+		MobileOs       bool         `fig:"use-mobile-os"`
 	}
 	Runtime struct {
 		DebugLog bool `fig:"debug-log"`
 	}
-	Presences []Presence
+	PresenceUpdater struct {
+		MultiPresence    bool          `fig:"multi-presence"`
+		PresenceInterval time.Duration `fig:"presence-interval" default:"10s"`
+		Presences        []Presence
+	} `fig:"presence-updater"`
 }
 
 type Presence struct {

@@ -69,8 +69,18 @@ func ResolvePresence(p Presence) *gateway.MessageDataPresenceUpdate {
 	}
 }
 
-func (pu *PUpdater) InitUpdater(c bot.Client) {
-	ticker := time.NewTicker(pu.Conf.Bot.PresenceInterval)
+func (pu *PUpdater) Setup(gc *gateway.Config) {
+	gc.Presence = pu.Next()
+}
+
+func (pu *PUpdater) StartUpdater(c bot.Client) {
+	if !pu.Conf.PresenceUpdater.
+		MultiPresence ||
+	len(pu.Conf.PresenceUpdater.Presences) <= 1 {
+		pu.Log.Info("Multi Presence: disabled")
+		return
+	}
+	ticker := time.NewTicker(pu.Conf.PresenceUpdater.PresenceInterval)
 	for range ticker.C {
 		pu.Log.Debug("Updating presence...")
 		presence := pu.Next()
@@ -86,9 +96,11 @@ func (pu *PUpdater) InitUpdater(c bot.Client) {
 }
 
 func (pu *PUpdater) Next() (data *gateway.MessageDataPresenceUpdate) {
-	size := len(pu.Conf.Presences)
+	size := len(pu.Conf.PresenceUpdater.Presences)
 
-	if p := ResolvePresence(pu.Conf.Presences[pu.current]); p != nil {
+	if p := ResolvePresence(
+		pu.Conf.PresenceUpdater.Presences[pu.current],
+	); p != nil {
 		data = p
 	}
 

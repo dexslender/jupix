@@ -27,16 +27,16 @@ func New(l log.Logger, c util.Config) *Jupix {
 
 type Jupix struct {
 	bot.Client
-	Config    util.Config
-	Log       log.Logger
-	Handler   *util.JIHandler
-	Presences util.PUpdater
+	Config   util.Config
+	Log      log.Logger
+	Handler  *util.JIHandler
+	PUpdater util.PUpdater
 }
 
 func (j *Jupix) SetupBot() {
 	var err error
 
-	j.Presences = util.PUpdater{
+	j.PUpdater = util.PUpdater{
 		Conf: j.Config,
 		Log:  j.Log,
 	}
@@ -49,9 +49,7 @@ func (j *Jupix) SetupBot() {
 		j.Config.Bot.Token,
 		bot.WithGatewayConfigOpts(
 			func(cfg *gateway.Config) {
-				if len(j.Config.Presences) >= 1 {
-					cfg.Presence = j.Presences.Next()
-				}
+				j.PUpdater.Setup(cfg)
 				if j.Config.Bot.MobileOs {
 					cfg.Browser = "Discord Android"
 				}
