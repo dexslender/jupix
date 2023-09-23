@@ -39,6 +39,7 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 			}
 			if err := c.Run(ctx); err != nil {
 				h.Log.Error("Handler error catched: ", err)
+				c.Error(ctx, err)
 			}
 		}
 
@@ -46,7 +47,7 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 		// case discord.ComponentInteraction:
 		// case discord.ModalSubmitInteraction:
 	default:
-		h.Log.Warnf("Unhandled interaction")
+		h.Log.Warnf("Unhandled '%s' interaction", StringfyInteractionType(i.Type()))
 	}
 }
 
@@ -99,3 +100,19 @@ func (h *JIHandler) SetupCommands(client bot.Client, commands []JCommand) {
 // func (h *JIHandler) Component() {
 
 // }
+func StringfyInteractionType(i discord.InteractionType) string {
+	switch i {
+	case discord.InteractionTypeComponent:
+		return "component"
+	case discord.InteractionTypeAutocomplete:
+		return "autocomplete"
+	case discord.InteractionTypeModalSubmit:
+		return "modal"
+	case discord.InteractionTypeApplicationCommand:
+		return "command"
+	case discord.InteractionTypePing:
+		return "ping"
+	default:
+		return "unknown"
+	}
+}

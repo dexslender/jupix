@@ -9,5 +9,6 @@ var Commands = []util.JCommand{
 	new(Ping),
 	new(useractions.GetUserId),
 	new(FixCMD),
-	// new(CommandTest),
+	new(Help),
+	new(CommandTest),
 }

@@ -12,7 +12,7 @@ type JCommand interface {
 	discord.ApplicationCommandCreate
 	Init()
 	Run(ctx *JContext) error
-	// Error(ctx *JContext, err error)
+	Error(ctx *JContext, err error)
 }
 
 type JContext struct {

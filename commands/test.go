@@ -6,11 +6,21 @@ import (
 )
 
 type CommandTest struct {
-	discord.ApplicationCommandCreate
+	discord.SlashCommandCreate
 }
 
-func (c *CommandTest) Init() {}
+func (c *CommandTest) Init() {
+	c.Name = "test"
+	c.Description = "A test command :D"
+}
 func (c *CommandTest) Run(ctx *util.JContext) error {
-	return nil
+	select_user := discord.NewUserSelectMenu("select_target", "Select three users here!").
+		WithMaxValues(3)
+
+	return ctx.CreateMessage(discord.NewMessageCreateBuilder().
+		AddActionRow(select_user).
+		SetEphemeral(true).
+		Build(),
+	)
 }
 func (c *CommandTest) Error(ctx *util.JContext, err error) {}
