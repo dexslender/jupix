@@ -8,7 +8,7 @@ image: golang:latest
 
 tasks:
   - name: Go setup
-    init: go get -v ./...
+    before: go get -v ./...
 
 # workspaceLocation: '.'
 
