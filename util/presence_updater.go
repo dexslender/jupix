@@ -70,7 +70,9 @@ func ResolvePresence(p Presence) *gateway.MessageDataPresenceUpdate {
 }
 
 func (pu *PUpdater) Setup(gc *gateway.Config) {
-	gc.Presence = pu.Next()
+	if len(pu.Conf.PresenceUpdater.Presences) <= 0 {
+		gc.Presence = pu.Next()
+	}
 }
 
 func (pu *PUpdater) StartUpdater(c bot.Client) {
