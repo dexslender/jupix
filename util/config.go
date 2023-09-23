@@ -27,6 +27,7 @@ presence-updater:
   presence-interval: 10s
   presences:
     - state: Online now!
+      type: custom
       status: online
 
     # - name:
@@ -73,6 +74,14 @@ func LoadConfig(l log.Logger, filename string) (config Config) {
 			l.Infof("Config file not found, creating in '%s'", fig.DefaultDir)
 			if err := WriteConfig(filename); err != nil {
 				log.Error("Error while written config file: ", err)
+			} else {
+				if err := fig.Load(
+					&config,
+					fig.UseEnv("JUPIX"),
+					fig.File(filename),
+				); err != nil {
+					l.Error("Config error: ", err)
+				}
 			}
 		} else {
 			l.Fatal("Config error: ", err)

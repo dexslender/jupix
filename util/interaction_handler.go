@@ -92,7 +92,7 @@ func (h *JIHandler) SetupCommands(client bot.Client, commands []JCommand) {
 
 	if err != nil {
 		h.Log.Error("Error in commands setup: ", err)
-	} else {
+	} else if h.Config.Bot.SetupCommands {
 		h.Log.Infof("Registered %d commands", len(reg))
 	}
 }
