@@ -14,6 +14,7 @@ import (
 
 const DEFAULT_CONTENT = `
 bot:
+#  token: your token here
   guild: 0
   setup-commands: false
   global-commands: false
@@ -66,6 +67,7 @@ type Presence struct {
 func LoadConfig(l log.Logger, filename string) (config Config) {
 	err := fig.Load(
 		&config,
+		// TODO: change "JUPIX"
 		fig.UseEnv("JUPIX"),
 		fig.File(filename),
 	)
