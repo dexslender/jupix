@@ -47,7 +47,7 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 		// case discord.ComponentInteraction:
 		// case discord.ModalSubmitInteraction:
 	default:
-		h.Log.Warnf("Unhandled '%s' interaction", StringfyInteractionType(i.Type()))
+		h.Log.Warnf("Unhandled '%s' interaction", StringifyInteractionType(i.Type()))
 	}
 }
 
@@ -100,7 +100,7 @@ func (h *JIHandler) SetupCommands(client bot.Client, commands []JCommand) {
 // func (h *JIHandler) Component() {
 
 // }
-func StringfyInteractionType(i discord.InteractionType) string {
+func StringifyInteractionType(i discord.InteractionType) string {
 	switch i {
 	case discord.InteractionTypeComponent:
 		return "component"
