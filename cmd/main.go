@@ -8,14 +8,12 @@ import (
 
 func main() {
 	l := log.New(log.Ltime | log.Lshortfile)
-	c := util.LoadConfig(l, "botconfig.yaml")
+	c := util.LoadConfig(l, "botconfig.yaml", "JUPIX")
 	if c.Runtime.DebugLog {
 		l.SetLevel(log.LevelDebug)
 	}
 
 	p := jupix.New(l, c)
-
 	p.SetupBot()
-
 	p.StartNLock()
 }

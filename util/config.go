@@ -64,13 +64,13 @@ type Presence struct {
 	State  string
 }
 
-func LoadConfig(l log.Logger, filename string) (config Config) {
+func LoadConfig(l log.Logger, filename string, env_prefix string) (config Config) {
 	err := fig.Load(
 		&config,
-		// TODO: change "JUPIX"
-		fig.UseEnv("JUPIX"),
+		fig.UseEnv(env_prefix),
 		fig.File(filename),
 	)
+
 	if err != nil {
 		if errors.Is(err, fig.ErrFileNotFound) {
 			l.Infof("Config file not found, creating in '%s'", fig.DefaultDir)
@@ -79,7 +79,7 @@ func LoadConfig(l log.Logger, filename string) (config Config) {
 			} else {
 				if err := fig.Load(
 					&config,
-					fig.UseEnv("JUPIX"),
+					fig.UseEnv(env_prefix),
 					fig.File(filename),
 				); err != nil {
 					l.Error("Config error: ", err)
