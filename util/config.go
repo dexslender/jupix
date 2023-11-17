@@ -14,13 +14,11 @@ import (
 
 const DEFAULT_CONTENT = `
 bot:
-#  token: your token here
+#  token: can be used as env-var
   guild: 0
   setup-commands: false
   global-commands: false
   use-mobile-os: true
-
-runtime:
   debug-log: false
 
 presence-updater:
@@ -45,9 +43,7 @@ type Config struct {
 		SetupCommands  bool         `fig:"setup-commands"`
 		GlobalCommands bool         `fig:"global-commands"`
 		MobileOs       bool         `fig:"use-mobile-os"`
-	}
-	Runtime struct {
-		DebugLog bool `fig:"debug-log"`
+		DebugLog       bool         `fig:"debug-log"`
 	}
 	PresenceUpdater struct {
 		MultiPresence    bool          `fig:"multi-presence"`
@@ -64,10 +60,10 @@ type Presence struct {
 	State  string
 }
 
-func LoadConfig(l log.Logger, filename string, env_prefix string) (config Config) {
+func LoadConfig(l log.Logger, filename string, env string) (config Config) {
 	err := fig.Load(
 		&config,
-		fig.UseEnv(env_prefix),
+		fig.UseEnv(env),
 		fig.File(filename),
 	)
 
@@ -79,7 +75,7 @@ func LoadConfig(l log.Logger, filename string, env_prefix string) (config Config
 			} else {
 				if err := fig.Load(
 					&config,
-					fig.UseEnv(env_prefix),
+					fig.UseEnv(env),
 					fig.File(filename),
 				); err != nil {
 					l.Error("Config error: ", err)

@@ -9,7 +9,7 @@ import (
 func main() {
 	l := log.New(log.Ltime | log.Lshortfile)
 	c := util.LoadConfig(l, "botconfig.yaml", "JUPIX")
-	if c.Runtime.DebugLog {
+	if c.Bot.DebugLog {
 		l.SetLevel(log.LevelDebug)
 	}
 
