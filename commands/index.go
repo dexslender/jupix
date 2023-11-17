@@ -11,4 +11,5 @@ var Commands = []util.JCommand{
 	new(FixCMD),
 	new(Help),
 	new(CommandTest),
+	new(NewCmd),
 }

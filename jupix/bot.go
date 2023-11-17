@@ -15,14 +15,11 @@ import (
 	"github.com/disgoorg/log"
 )
 
-var jx Jupix
-
 func New(l log.Logger, c util.Config) *Jupix {
-	jx = Jupix{
+	return &Jupix{
 		Config: c,
 		Log:    l,
 	}
-	return &jx
 }
 
 type Jupix struct {
@@ -61,7 +58,7 @@ func (j *Jupix) SetupBot() {
 			),
 		),
 		bot.WithLogger(j.Log),
-		bot.WithEventListeners(listeners, j.Handler),
+		bot.WithEventListeners(listeners(j), j.Handler),
 	); err != nil {
 		j.Log.Fatal("Client error: ", err)
 	}
