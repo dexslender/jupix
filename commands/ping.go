@@ -11,7 +11,7 @@ type Ping struct {
 	discord.SlashCommandCreate
 }
 
-func (c *Ping) Init() {
+func (c *Ping) Init(util.JHRegister) {
 	c.Name = "ping"
 	c.Description = "Latency of the bot"
 }
@@ -44,5 +44,5 @@ func (c *Ping) Run(ctx *util.JContext) error {
 }
 
 func (t *Ping) Error(ctx *util.JContext, err error) {
-	
+
 }

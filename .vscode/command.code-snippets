@@ -23,7 +23,7 @@
 			"",
 			"type $1 struct {",
 			"}",
-			"func (c *$1) Init() {}",
+			"func (c *$1) Init(util.JHRegister) {}",
 			"func (c *$1) Run(ctx *util.JContext) error {",
 			"\treturn nil$2",
 			"}",

@@ -7,6 +7,8 @@ import (
 	"github.com/disgoorg/log"
 )
 
+var _ JHRegister = (*JIHandler)(nil)
+
 func NewIHandler() *JIHandler {
 	return &JIHandler{
 		commands: make(map[string]JCommand),
@@ -14,9 +16,18 @@ func NewIHandler() *JIHandler {
 }
 
 type JIHandler struct {
-	Log      log.Logger
-	Config   Config
-	commands map[string]JCommand
+	Log        log.Logger
+	Config     Config
+	commands   map[string]JCommand
+	components map[string]ComponentHandle
+	modals     map[string]ModalHandle
+	autocompls map[string]AutocompleteHandle
+}
+
+type JHRegister interface {
+	Component(customID string, handle ComponentHandle)
+	Modal(customID string, handle ModalHandle)
+	Autocomplete(p string, handle AutocompleteHandle)
 }
 
 func (h *JIHandler) OnEvent(event bot.Event) {
@@ -43,11 +54,16 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 			}
 		}
 
+	case discord.ComponentInteraction:
+		h.Log.Infof("Received component: %s::%s", ComponentInteractionType[i.Data.Type()], i.Data.CustomID())
+		if _, ok := h.components[i.Data.CustomID()]; ok {
+
+		}
+
 		// case discord.AutocompleteInteraction:
-		// case discord.ComponentInteraction:
 		// case discord.ModalSubmitInteraction:
 	default:
-		h.Log.Warnf("Unhandled '%s' interaction", StringifyInteractionType(i.Type()))
+		h.Log.Warnf("Unhandled '%s' interaction", InteractionTypeString[i.Type()])
 	}
 }
 
@@ -65,7 +81,7 @@ func (h *JIHandler) SetupCommands(client bot.Client, commands []JCommand) {
 	cmds := []discord.ApplicationCommandCreate{}
 
 	for _, c := range commands {
-		c.Init()
+		c.Init(JHRegister(h))
 		cmds = append(cmds, c)
 		h.commands[c.CommandName()] = c
 	}
@@ -97,22 +113,35 @@ func (h *JIHandler) SetupCommands(client bot.Client, commands []JCommand) {
 	}
 }
 
-// func (h *JIHandler) Component() {
+func (h *JIHandler) Component(customID string, handle ComponentHandle) {
+	h.components[customID] = handle
+}
 
-// }
-func StringifyInteractionType(i discord.InteractionType) string {
-	switch i {
-	case discord.InteractionTypeComponent:
-		return "component"
-	case discord.InteractionTypeAutocomplete:
-		return "autocomplete"
-	case discord.InteractionTypeModalSubmit:
-		return "modal"
-	case discord.InteractionTypeApplicationCommand:
-		return "command"
-	case discord.InteractionTypePing:
-		return "ping"
-	default:
-		return "unknown"
-	}
+func (h *JIHandler) Modal(customID string, handle ModalHandle) {
+
+}
+
+func (h *JIHandler) Autocomplete(p string, handle AutocompleteHandle) {
+
+}
+
+// Debug purposes
+var ComponentInteractionType = map[discord.ComponentType]string{
+	discord.ComponentTypeActionRow:             `action_row`,
+	discord.ComponentTypeButton:                `button`,
+	discord.ComponentTypeStringSelectMenu:      `string_select_menu`,
+	discord.ComponentTypeTextInput:             `text_input`,
+	discord.ComponentTypeUserSelectMenu:        `user_select_menu`,
+	discord.ComponentTypeRoleSelectMenu:        `role_select_menu`,
+	discord.ComponentTypeMentionableSelectMenu: `mentionable_select_menu`,
+	discord.ComponentTypeChannelSelectMenu:     `channel_select_menu`,
+}
+
+// Debug purposes
+var InteractionTypeString = map[discord.InteractionType]string{
+	discord.InteractionTypeComponent:          `component`,
+	discord.InteractionTypeAutocomplete:       `autocomplete`,
+	discord.InteractionTypeModalSubmit:        `modal`,
+	discord.InteractionTypeApplicationCommand: `command`,
+	discord.InteractionTypePing:               `ping`,
 }

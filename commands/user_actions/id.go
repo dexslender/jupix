@@ -9,7 +9,7 @@ type GetUserId struct {
 	discord.UserCommandCreate
 }
 
-func (c *GetUserId) Init() {
+func (c *GetUserId) Init(util.JHRegister) {
 	c.Name = "Get ID"
 }
 

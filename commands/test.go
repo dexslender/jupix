@@ -9,7 +9,7 @@ type CommandTest struct {
 	discord.SlashCommandCreate
 }
 
-func (c *CommandTest) Init() {
+func (c *CommandTest) Init(util.JHRegister) {
 	c.Name = "test"
 	c.Description = "A test command :D"
 }

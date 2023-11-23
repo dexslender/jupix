@@ -9,7 +9,7 @@ type Help struct {
 	discord.SlashCommandCreate
 }
 
-func (c *Help) Init() {
+func (c *Help) Init(util.JHRegister) {
 	c.Name = "help"
 	c.Description = "😉・Do you need help?"
 	c.DescriptionLocalizations = map[discord.Locale]string{

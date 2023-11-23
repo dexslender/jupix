@@ -10,7 +10,7 @@ import (
 
 type JCommand interface {
 	discord.ApplicationCommandCreate
-	Init()
+	Init(JHRegister)
 	Run(ctx *JContext) error
 	Error(ctx *JContext, err error)
 }

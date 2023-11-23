@@ -12,7 +12,7 @@ type FixCMD struct {
 	discord.SlashCommandCreate
 }
 
-func (c *FixCMD) Init() {
+func (c *FixCMD) Init(util.JHRegister) {
 	c.Name = "fix"
 	c.Description = "Fix things with this command"
 	c.DMPermission = json.Ptr(false)
@@ -105,5 +105,5 @@ func OnRolMembers(ctx *util.JContext) error {
 }
 
 func (t *FixCMD) Error(ctx *util.JContext, err error) {
-	
+
 }
