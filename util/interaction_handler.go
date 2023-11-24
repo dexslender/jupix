@@ -56,12 +56,39 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 
 	case discord.ComponentInteraction:
 		h.Log.Infof("Received component: %s::%s", ComponentInteractionType[i.Data.Type()], i.Data.CustomID())
-		if _, ok := h.components[i.Data.CustomID()]; ok {
-
+		if c, ok := h.components[i.Data.CustomID()]; ok {
+			ctx := &ComponentCtx{
+				events.ComponentInteractionCreate{
+					GenericEvent:         e.GenericEvent,
+					ComponentInteraction: e.Interaction.(discord.ComponentInteraction),
+					Respond:              e.Respond,
+				},
+				h.Log,
+			}
+			if err := c(ctx); err != nil {
+				h.Log.Error("Component interaction error: ", err)
+			}
 		}
 
-		// case discord.AutocompleteInteraction:
-		// case discord.ModalSubmitInteraction:
+	case discord.ModalSubmitInteraction:
+		h.Log.Info("Received modal: ", i.Data.CustomID)
+		if m, ok := h.modals[i.Data.CustomID]; ok {
+			ctx := &ModalCtx{
+				events.ModalSubmitInteractionCreate{
+					GenericEvent: e.GenericEvent,
+					ModalSubmitInteraction: e.Interaction.(discord.ModalSubmitInteraction),
+					Respond: e.Respond,
+				},
+				h.Log,
+			}
+			if err := m(ctx); err != nil {
+				h.Log.Error("Modal submit error: ", err)
+			}
+		}
+
+	case discord.AutocompleteInteraction:
+		h.Log.Info("Received autocomplete request", i.Data.CommandName)
+
 	default:
 		h.Log.Warnf("Unhandled '%s' interaction", InteractionTypeString[i.Type()])
 	}
@@ -118,7 +145,7 @@ func (h *JIHandler) Component(customID string, handle ComponentHandle) {
 }
 
 func (h *JIHandler) Modal(customID string, handle ModalHandle) {
-
+	h.modals[customID] = handle
 }
 
 func (h *JIHandler) Autocomplete(p string, handle AutocompleteHandle) {

@@ -1,16 +1,29 @@
 package util
 
-type ComponentHandle func(ctx ComponentCtx) error
+import (
+	"github.com/disgoorg/disgo/events"
+	"github.com/disgoorg/log"
+)
+
+type ComponentHandle func(ctx *ComponentCtx) error
 
 type ComponentCtx struct {
+	events.ComponentInteractionCreate
+	Log log.Logger
 }
-type ModalHandle func(ctx ModalCtx) error
+
+type ModalHandle func(ctx *ModalCtx) error
 
 type ModalCtx struct {
+	events.ModalSubmitInteractionCreate
+	Log log.Logger
 }
+
+// return the result?
 type AutocompleteHandle func(ctx AutocompleteCtx) error
 
 type AutocompleteCtx struct {
+	events.AutocompleteInteractionCreate
 }
 
 type JComponent struct{}
