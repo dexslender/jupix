@@ -9,10 +9,19 @@ type NewCmd struct {
 	discord.SlashCommandCreate
 }
 
-func (c *NewCmd) Init(util.JHRegister) {
+func (c *NewCmd) Init(r util.JHRegister) {
 	c.Name = "new"
 	c.Description = "Create a new custom command"
+
+	r.Modal("command-maker", func(ctx *util.ModalCtx) error {
+		return ctx.CreateMessage(discord.NewMessageCreateBuilder().
+			SetContent("# Okay, but not working for now...").
+			SetEphemeral(true).
+			Build(),
+		)
+	})
 }
+
 func (c *NewCmd) Run(ctx *util.JContext) error {
 	return ctx.Modal(discord.NewModalCreateBuilder().
 		SetCustomID("command-maker").

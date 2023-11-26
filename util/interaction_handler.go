@@ -12,6 +12,9 @@ var _ JHRegister = (*JIHandler)(nil)
 func NewIHandler() *JIHandler {
 	return &JIHandler{
 		commands: make(map[string]JCommand),
+		components: make(map[string]ComponentHandle),
+		modals: make(map[string]ModalHandle),
+		autocompls: make(map[string]AutocompleteHandle),
 	}
 }
 
