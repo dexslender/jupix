@@ -1,0 +1,22 @@
+
+bot:
+  # token: can be used as env-var
+  # guild: something guild :|
+  setup-commands: false
+  global-commands: false
+  use-mobile-os: true
+  debug-log: false
+
+presence-updater:
+  multi-presence: false
+  presence-interval: 10s
+  presences:
+    - state: Online now!
+      type: custom
+      status: online
+
+    # - name:
+    #   type:
+    #   status:
+    #   url:
+    #   state:
