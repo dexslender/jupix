@@ -14,12 +14,12 @@ func (c *CommandTest) Init(util.JHRegister) {
 	c.Description = "A test command :D"
 }
 func (c *CommandTest) Run(ctx *util.JContext) error {
-	select_user := discord.NewUserSelectMenu("select_target", "Select three users here!").
-		WithMaxValues(3)
+	// select_user := discord.NewUserSelectMenu("select_target", "Select three users here!").
+	// 	WithMaxValues(3)
 
 	return ctx.CreateMessage(discord.NewMessageCreateBuilder().
-		AddActionRow(select_user).
 		SetEphemeral(true).
+		SetContent("no specified.").
 		Build(),
 	)
 }

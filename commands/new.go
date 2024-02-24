@@ -14,10 +14,10 @@ func (c *NewCmd) Init(r util.JHRegister) {
 	c.Description = "Create a new custom command"
 
 	r.Modal("command-maker", func(ctx *util.ModalCtx) error {
-		o := util.Parse(ctx.Data.Text("code"))
-		for _, order := range o {
-			order(*ctx)
-		}
+		// o := util.Parse(ctx.Data.Text("code"))
+		// for _, order := range o {
+		// 	order(*ctx)
+		// }
 		return nil
 		// ctx.CreateMessage(discord.NewMessageCreateBuilder().
 		// 	SetContent("# Okay, but not working for now...").
