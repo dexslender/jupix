@@ -11,7 +11,7 @@ import (
 )
 
 type PUpdater struct {
-	Conf    Config
+	Config  Config
 	Log     log.Logger
 	current int
 }
@@ -70,39 +70,39 @@ func ResolvePresence(p Presence) *gateway.MessageDataPresenceUpdate {
 }
 
 func (pu *PUpdater) Setup(gc *gateway.Config) {
-	if len(pu.Conf.PresenceUpdater.Presences) >= 1 {
+	if pu.Config.PresenceUpdater.Enabled &&
+		len(pu.Config.PresenceUpdater.Presences) >= 1 {
 		gc.Presence = pu.Next()
+	} else {
+		pu.Log.Info("presence updater disabled")
 	}
 }
 
 func (pu *PUpdater) StartUpdater(c bot.Client) {
-	if !pu.Conf.PresenceUpdater.
-		MultiPresence ||
-	len(pu.Conf.PresenceUpdater.Presences) <= 1 {
-		pu.Log.Info("Multi Presence: disabled")
+	if !pu.Config.PresenceUpdater.Enabled ||
+		len(pu.Config.PresenceUpdater.Presences) <= 1 {
 		return
 	}
-	ticker := time.NewTicker(pu.Conf.PresenceUpdater.PresenceInterval)
+	ticker := time.NewTicker(pu.Config.PresenceUpdater.Delay)
 	for range ticker.C {
-		pu.Log.Debug("Updating presence...")
-		presence := pu.Next()
-		if presence == nil {
+		p := pu.Next()
+		if p == nil {
 			continue
 		}
-		c.Gateway().Presence().Activities = presence.Activities
-		c.Gateway().Presence().Status = presence.Status
+		pu.Log.Debugf("updating bot presence: index:%d", pu.current)
+		c.Gateway().Presence().Activities = p.Activities
+		c.Gateway().Presence().Status = p.Status
 		if err := c.SetPresence(context.Background()); err != nil {
-			pu.Log.Error("Error in presence handler: ", err)
+			pu.Log.Error("failed to send presence data to gateway: ", err)
 		}
 	}
 }
 
 func (pu *PUpdater) Next() (data *gateway.MessageDataPresenceUpdate) {
-	size := len(pu.Conf.PresenceUpdater.Presences)
+	size := len(pu.Config.PresenceUpdater.Presences)
 
-	if p := ResolvePresence(
-		pu.Conf.PresenceUpdater.Presences[pu.current],
-	); p != nil {
+	p := ResolvePresence(pu.Config.PresenceUpdater.Presences[pu.current])
+	if p != nil {
 		data = p
 	}
 

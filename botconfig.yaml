@@ -8,8 +8,8 @@ bot:
   debug-log: false
 
 presence-updater:
-  multi-presence: false
-  presence-interval: 10s
+  enabled: false
+  delay: 10s
   presences:
     - state: Online now!
       type: custom

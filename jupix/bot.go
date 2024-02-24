@@ -34,8 +34,8 @@ func (j *Jupix) SetupBot() {
 	var err error
 
 	j.PUpdater = util.PUpdater{
-		Conf: j.Config,
-		Log:  j.Log,
+		Config: j.Config,
+		Log:    j.Log,
 	}
 
 	j.Handler = util.NewIHandler().

@@ -46,9 +46,9 @@ type Config struct {
 		DebugLog       bool         `fig:"debug-log"`
 	}
 	PresenceUpdater struct {
-		MultiPresence    bool          `fig:"multi-presence"`
-		PresenceInterval time.Duration `fig:"presence-interval" default:"10s"`
-		Presences        []Presence
+		Enabled   bool          `fig:"enabled"`
+		Delay     time.Duration `fig:"delay" default:"10s"`
+		Presences []Presence
 	} `fig:"presence-updater"`
 }
 
