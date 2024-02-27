@@ -10,12 +10,10 @@ bot:
   debug-log: false
 
 presence-updater:
-  enabled: false
+  enabled: true
   delay: 10s
   presences:
     - state: Online now!
-      type: custom
-      status: online
 
     # - name:
     #   type:

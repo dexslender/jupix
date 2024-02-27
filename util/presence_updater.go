@@ -56,7 +56,11 @@ func ResolvePresence(p Presence) *gateway.MessageDataPresenceUpdate {
 	case "custom":
 		activity.Type = discord.ActivityTypeCustom
 	default:
-		activity.Type = discord.ActivityTypeGame
+		if p.State != "" && p.Name == "" {
+			activity.Type = discord.ActivityTypeCustom
+		} else {
+			activity.Type = discord.ActivityTypeGame
+		}
 	}
 
 	if activity.Type == discord.ActivityTypeStreaming && p.URL != "" {
@@ -104,6 +108,8 @@ func (pu *PUpdater) Next() (data *gateway.MessageDataPresenceUpdate) {
 	p := ResolvePresence(pu.Config.PresenceUpdater.Presences[pu.current])
 	if p != nil {
 		data = p
+	} else {
+		pu.Log.Warn("presence %d requires 'name' or 'state'", pu.current)
 	}
 
 	if pu.current >= size-1 {

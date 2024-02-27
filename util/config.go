@@ -13,17 +13,20 @@ import (
 )
 
 const DEFAULT_CONTENT = `
+# Some variables can be in enviroment
+# See more https://pkg.go.dev/github.com/kkyr/fig#UseEnv
+
 bot:
-#  token: can be used as env-var
-  guild: 0
+  # token: 
+  # guild: 
   setup-commands: false
   global-commands: false
   use-mobile-os: true
   debug-log: false
 
 presence-updater:
-  multi-presence: false
-  presence-interval: 10s
+  enabled: true
+  delay: 10s
   presences:
     - state: Online now!
       type: custom
@@ -34,6 +37,7 @@ presence-updater:
     #   status:
     #   url:
     #   state:
+
 `
 
 type Config struct {
