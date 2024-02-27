@@ -1,7 +1,9 @@
+# Some variables can be in enviroment
+# See more https://pkg.go.dev/github.com/kkyr/fig#UseEnv
 
 bot:
-  # token: can be used as env-var
-  # guild: something guild :|
+  # token: 
+  # guild: 
   setup-commands: false
   global-commands: false
   use-mobile-os: true
