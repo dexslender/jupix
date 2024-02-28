@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/disgoorg/disgo/discord"
-	"github.com/disgoorg/log"
+	"github.com/charmbracelet/log"
 	"github.com/disgoorg/snowflake/v2"
 	"github.com/kkyr/fig"
 )
@@ -64,7 +64,7 @@ type Presence struct {
 	State  string
 }
 
-func LoadConfig(l log.Logger, filename string, env string) (config Config) {
+func LoadConfig(l *log.Logger, filename string, env string) (config Config) {
 	err := fig.Load(
 		&config,
 		fig.UseEnv(env),
@@ -73,20 +73,20 @@ func LoadConfig(l log.Logger, filename string, env string) (config Config) {
 
 	if err != nil {
 		if errors.Is(err, fig.ErrFileNotFound) {
-			l.Infof("Config file not found, creating in '%s'", fig.DefaultDir)
+			l.Info("config file not found, creating", "dir", fig.DefaultDir)
 			if err := WriteConfig(filename); err != nil {
-				log.Error("Error while written config file: ", err)
+				log.Error("Error while written config file", "err", err)
 			} else {
 				if err := fig.Load(
 					&config,
 					fig.UseEnv(env),
 					fig.File(filename),
 				); err != nil {
-					l.Error("Config error: ", err)
+					l.Error("config error", "err", err)
 				}
 			}
 		} else {
-			l.Fatal("Config error: ", err)
+			l.Fatal("config error", "err", err)
 		}
 	}
 	return

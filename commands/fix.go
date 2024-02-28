@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/dexslender/jupix/util"
 	"github.com/disgoorg/disgo/discord"
@@ -71,7 +72,7 @@ func OnRolMembers(ctx *util.JContext) error {
 			log_err(err)
 		} else {
 			mc = *g.ApproximateMemberCount
-			ctx.Client().Logger().Info("Member count: ", *g.ApproximateMemberCount)
+			ctx.Client().Logger().Info("members", slog.Int("count", *g.ApproximateMemberCount))
 		}
 
 		if ms, err := ctx.

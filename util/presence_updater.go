@@ -7,12 +7,12 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/gateway"
-	"github.com/disgoorg/log"
+	"github.com/charmbracelet/log"
 )
 
 type PUpdater struct {
 	Config  Config
-	Log     log.Logger
+	Log     *log.Logger
 	current int
 }
 
@@ -93,11 +93,11 @@ func (pu *PUpdater) StartUpdater(c bot.Client) {
 		if p == nil {
 			continue
 		}
-		pu.Log.Debugf("updating bot presence: index:%d", pu.current)
+		pu.Log.Debug("updating bot presence", "index", pu.current)
 		c.Gateway().Presence().Activities = p.Activities
 		c.Gateway().Presence().Status = p.Status
 		if err := c.SetPresence(context.Background()); err != nil {
-			pu.Log.Error("failed to send presence data to gateway: ", err)
+			pu.Log.Error("failed to send presence data to gateway", "err", err)
 		}
 	}
 }
@@ -109,7 +109,7 @@ func (pu *PUpdater) Next() (data *gateway.MessageDataPresenceUpdate) {
 	if p != nil {
 		data = p
 	} else {
-		pu.Log.Warn("presence %d requires 'name' or 'state'", pu.current)
+		pu.Log.Warn("presence requires 'name' or 'state'", "index", pu.current)
 	}
 
 	if pu.current >= size-1 {

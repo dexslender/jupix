@@ -2,20 +2,21 @@ package jupix
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"github.com/charmbracelet/log"
 	"github.com/dexslender/jupix/commands"
 	"github.com/dexslender/jupix/util"
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/gateway"
-	"github.com/disgoorg/log"
 )
 
-func New(l log.Logger, c util.Config) *Jupix {
+func New(l *log.Logger, c util.Config) *Jupix {
 	return &Jupix{
 		Config: c,
 		Log:    l,
@@ -25,7 +26,7 @@ func New(l log.Logger, c util.Config) *Jupix {
 type Jupix struct {
 	bot.Client
 	Config   util.Config
-	Log      log.Logger
+	Log      *log.Logger
 	Handler  *util.JIHandler
 	PUpdater util.PUpdater
 }
@@ -57,7 +58,7 @@ func (j *Jupix) SetupBot() {
 					gateway.IntentGuildMembers,
 			),
 		),
-		bot.WithLogger(j.Log),
+		bot.WithLogger(slog.New(j.Log)),
 		bot.WithEventListeners(listeners(j), j.Handler),
 	); err != nil {
 		j.Log.Fatal("Client error: ", err)
