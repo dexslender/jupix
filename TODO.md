@@ -4,4 +4,4 @@
 - [x] Enhance `util/config.go` for better config sistem 
 - [ ] Add documentation for the cofiguration
 - [ ] Handler supports `Modals` `Components` & `Autocomplete` interactions
-- [ ] Change `github.com/disgoorg/log` to `github.com/charmbracelet/log` (better log?)
+- [x] Change `github.com/disgoorg/log` to `github.com/charmbracelet/log` (better log?) [95c31bd](https://github.com/dexslender/jupix/commit/95c31bdcfa3e91c9057fdb8665b0a22e36bef585)
