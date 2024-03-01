@@ -7,23 +7,26 @@ import (
 	"time"
 
 	"github.com/disgoorg/disgo/discord"
-	"github.com/disgoorg/log"
+	"github.com/charmbracelet/log"
 	"github.com/disgoorg/snowflake/v2"
 	"github.com/kkyr/fig"
 )
 
 const DEFAULT_CONTENT = `
+# Some variables can be in enviroment
+# See more https://pkg.go.dev/github.com/kkyr/fig#UseEnv
+
 bot:
-#  token: can be used as env-var
-  guild: 0
+  # token: 
+  # guild: 
   setup-commands: false
   global-commands: false
   use-mobile-os: true
   debug-log: false
 
 presence-updater:
-  multi-presence: false
-  presence-interval: 10s
+  enabled: true
+  delay: 10s
   presences:
     - state: Online now!
       type: custom
@@ -34,6 +37,7 @@ presence-updater:
     #   status:
     #   url:
     #   state:
+
 `
 
 type Config struct {
@@ -46,9 +50,9 @@ type Config struct {
 		DebugLog       bool         `fig:"debug-log"`
 	}
 	PresenceUpdater struct {
-		MultiPresence    bool          `fig:"multi-presence"`
-		PresenceInterval time.Duration `fig:"presence-interval" default:"10s"`
-		Presences        []Presence
+		Enabled   bool          `fig:"enabled"`
+		Delay     time.Duration `fig:"delay" default:"10s"`
+		Presences []Presence
 	} `fig:"presence-updater"`
 }
 
@@ -60,7 +64,7 @@ type Presence struct {
 	State  string
 }
 
-func LoadConfig(l log.Logger, filename string, env string) (config Config) {
+func LoadConfig(l *log.Logger, filename string, env string) (config Config) {
 	err := fig.Load(
 		&config,
 		fig.UseEnv(env),
@@ -69,20 +73,20 @@ func LoadConfig(l log.Logger, filename string, env string) (config Config) {
 
 	if err != nil {
 		if errors.Is(err, fig.ErrFileNotFound) {
-			l.Infof("Config file not found, creating in '%s'", fig.DefaultDir)
+			l.Info("config file not found, creating", "dir", fig.DefaultDir)
 			if err := WriteConfig(filename); err != nil {
-				log.Error("Error while written config file: ", err)
+				log.Error("Error while written config file", "err", err)
 			} else {
 				if err := fig.Load(
 					&config,
 					fig.UseEnv(env),
 					fig.File(filename),
 				); err != nil {
-					l.Error("Config error: ", err)
+					l.Error("config error", "err", err)
 				}
 			}
 		} else {
-			l.Fatal("Config error: ", err)
+			l.Fatal("config error", "err", err)
 		}
 	}
 	return

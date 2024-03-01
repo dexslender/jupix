@@ -4,7 +4,7 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
-	"github.com/disgoorg/log"
+	"github.com/charmbracelet/log"
 )
 
 var _ JHRegister = (*JIHandler)(nil)
@@ -19,7 +19,7 @@ func NewIHandler() *JIHandler {
 }
 
 type JIHandler struct {
-	Log        log.Logger
+	Log        *log.Logger
 	Config     Config
 	commands   map[string]JCommand
 	components map[string]ComponentHandle
@@ -41,7 +41,7 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 
 	switch i := e.Interaction.(type) {
 	case discord.ApplicationCommandInteraction:
-		h.Log.Info("Received interaction: ", i.Data.CommandName())
+		h.Log.Info("received interaction", "name", i.Data.CommandName())
 		if c, ok := h.commands[i.Data.CommandName()]; ok {
 			ctx := &JContext{
 				events.ApplicationCommandInteractionCreate{
@@ -58,7 +58,7 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 		}
 
 	case discord.ComponentInteraction:
-		h.Log.Infof("Received component: %s::%s", ComponentInteractionType[i.Data.Type()], i.Data.CustomID())
+		h.Log.Info("received component", ComponentInteractionType[i.Data.Type()], i.Data.CustomID())
 		if c, ok := h.components[i.Data.CustomID()]; ok {
 			ctx := &ComponentCtx{
 				events.ComponentInteractionCreate{
@@ -69,12 +69,12 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 				h.Log,
 			}
 			if err := c(ctx); err != nil {
-				h.Log.Error("Component interaction error: ", err)
+				h.Log.Error("component interaction error: ", "err", err)
 			}
 		}
 
 	case discord.ModalSubmitInteraction:
-		h.Log.Info("Received modal: ", i.Data.CustomID)
+		h.Log.Info("received modal", "custom_id", i.Data.CustomID)
 		if m, ok := h.modals[i.Data.CustomID]; ok {
 			ctx := &ModalCtx{
 				events.ModalSubmitInteractionCreate{
@@ -85,19 +85,32 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 				h.Log,
 			}
 			if err := m(ctx); err != nil {
-				h.Log.Error("Modal submit error: ", err)
+				h.Log.Error("modal submit error", "err", err)
 			}
 		}
 
 	case discord.AutocompleteInteraction:
-		h.Log.Info("Received autocomplete request", i.Data.CommandName)
+		h.Log.Info("received autocomplete request", "command", i.Data.CommandName)
+		if a, ok := h.autocompls[i.Data.CommandName]; ok {
+			ctx := &AutocompleteCtx{
+				events.AutocompleteInteractionCreate{
+					GenericEvent: e.GenericEvent,
+					AutocompleteInteraction: e.Interaction.(discord.AutocompleteInteraction),
+					Respond: e.Respond,
+				},
+				h.Log,
+			}
+			if err := a(ctx); err != nil {
+				h.Log.Error("failed to send autocomplete", "err", err)
+			} 
+		}
 
 	default:
-		h.Log.Warnf("Unhandled '%s' interaction", InteractionTypeString[i.Type()])
+		h.Log.Warnf("unhandled '%s' interaction", InteractionTypeString[i.Type()])
 	}
 }
 
-func (h *JIHandler) WithLogger(l log.Logger) *JIHandler {
+func (h *JIHandler) WithLogger(l *log.Logger) *JIHandler {
 	h.Log = l
 	return h
 }
@@ -137,9 +150,9 @@ func (h *JIHandler) SetupCommands(client bot.Client, commands []JCommand) {
 	}
 
 	if err != nil {
-		h.Log.Error("Error in commands setup: ", err)
+		h.Log.Error("error in commands setup", "err", err)
 	} else if h.Config.Bot.SetupCommands {
-		h.Log.Infof("Registered %d commands", len(reg))
+		h.Log.Infof("registered %d commands", len(reg))
 	}
 }
 

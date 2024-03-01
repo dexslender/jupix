@@ -9,7 +9,7 @@ func listeners(jx *Jupix) bot.EventListener {
 	return &events.ListenerAdapter{
 		OnReady: func(event *events.Ready) {
 			go jx.PUpdater.StartUpdater(event.Client())
-			jx.Log.Infof("Logged in as '@%s'", event.User.Username)
+			jx.Log.Info("Logged in", "username", event.User.Username)
 		},
 	}
 }

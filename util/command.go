@@ -4,7 +4,7 @@ import (
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/disgo/rest"
-	"github.com/disgoorg/log"
+	"github.com/charmbracelet/log"
 	"github.com/disgoorg/snowflake/v2"
 )
 
@@ -17,7 +17,7 @@ type JCommand interface {
 
 type JContext struct {
 	events.ApplicationCommandInteractionCreate
-	Log log.Logger
+	Log *log.Logger
 }
 
 func (e *JContext) GetInteractionResponse(opts ...rest.RequestOpt) (*discord.Message, error) {

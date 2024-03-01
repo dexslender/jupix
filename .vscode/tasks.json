@@ -16,7 +16,7 @@
                 "build",
                 "-o",
                 "bin/$BIN_NAME",
-                "./cmd"
+                "."
             ],
             "icon": {
                 "id": "tools"
@@ -28,7 +28,17 @@
             "problemMatcher": []
         },
         {
-            "label": "Rebuild & Run Bot",
+            "label": "Run Bin",
+            "type": "shell",
+            "command": "./bin/$BIN_NAME",
+            "icon": {
+                "id": "play",
+                "color": "terminal.ansiGreen"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Rebuild & Run Bin",
             "type": "shell",
             "command": "./bin/$BIN_NAME",
             "icon": {
@@ -37,15 +47,5 @@
             "dependsOn": "Build Bot",
             "problemMatcher": []
         },
-        {
-            "label": "Run Bot",
-            "type": "shell",
-            "command": "./bin/$BIN_NAME",
-            "icon": {
-                "id": "play",
-                "color": "terminal.ansiGreen"
-            },
-            "problemMatcher": []
-        }
     ]
 }
