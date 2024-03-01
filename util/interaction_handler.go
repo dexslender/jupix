@@ -91,9 +91,22 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 
 	case discord.AutocompleteInteraction:
 		h.Log.Info("received autocomplete request", "command", i.Data.CommandName)
+		if a, ok := h.autocompls[i.Data.CommandName]; ok {
+			ctx := &AutocompleteCtx{
+				events.AutocompleteInteractionCreate{
+					GenericEvent: e.GenericEvent,
+					AutocompleteInteraction: e.Interaction.(discord.AutocompleteInteraction),
+					Respond: e.Respond,
+				},
+				h.Log,
+			}
+			if err := a(ctx); err != nil {
+				h.Log.Error("failed to send autocomplete", "err", err)
+			} 
+		}
 
 	default:
-		h.Log.Warnf("Unhandled '%s' interaction", InteractionTypeString[i.Type()])
+		h.Log.Warnf("unhandled '%s' interaction", InteractionTypeString[i.Type()])
 	}
 }
 
@@ -139,7 +152,7 @@ func (h *JIHandler) SetupCommands(client bot.Client, commands []JCommand) {
 	if err != nil {
 		h.Log.Error("error in commands setup", "err", err)
 	} else if h.Config.Bot.SetupCommands {
-		h.Log.Infof("Registered %d commands", len(reg))
+		h.Log.Infof("registered %d commands", len(reg))
 	}
 }
 

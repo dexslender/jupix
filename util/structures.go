@@ -20,10 +20,11 @@ type ModalCtx struct {
 }
 
 // return the result?
-type AutocompleteHandle func(ctx AutocompleteCtx) error
+type AutocompleteHandle func(ctx *AutocompleteCtx) error
 
 type AutocompleteCtx struct {
 	events.AutocompleteInteractionCreate
+	Log *log.Logger
 }
 
 type JComponent struct{}
