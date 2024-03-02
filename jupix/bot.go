@@ -39,9 +39,7 @@ func (j *Jupix) SetupBot() {
 		Log:    j.Log,
 	}
 
-	j.Handler = util.NewIHandler().
-		WithLogger(j.Log).
-		WithConfig(j.Config)
+	j.Handler = util.NewIHandler(j.Log, j.Config)
 
 	if j.Client, err = disgo.New(
 		j.Config.Bot.Token,

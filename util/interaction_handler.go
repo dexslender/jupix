@@ -1,19 +1,21 @@
 package util
 
 import (
+	"github.com/charmbracelet/log"
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
-	"github.com/charmbracelet/log"
 )
 
 var _ JHRegister = (*JIHandler)(nil)
 
-func NewIHandler() *JIHandler {
+func NewIHandler(l *log.Logger, c Config) *JIHandler {
 	return &JIHandler{
-		commands: make(map[string]JCommand),
+		Log:        l,
+		Config:     c,
+		commands:   make(map[string]JCommand),
 		components: make(map[string]ComponentHandle),
-		modals: make(map[string]ModalHandle),
+		modals:     make(map[string]ModalHandle),
 		autocompls: make(map[string]AutocompleteHandle),
 	}
 }
@@ -78,9 +80,9 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 		if m, ok := h.modals[i.Data.CustomID]; ok {
 			ctx := &ModalCtx{
 				events.ModalSubmitInteractionCreate{
-					GenericEvent: e.GenericEvent,
+					GenericEvent:           e.GenericEvent,
 					ModalSubmitInteraction: e.Interaction.(discord.ModalSubmitInteraction),
-					Respond: e.Respond,
+					Respond:                e.Respond,
 				},
 				h.Log,
 			}
@@ -94,30 +96,20 @@ func (h *JIHandler) OnEvent(event bot.Event) {
 		if a, ok := h.autocompls[i.Data.CommandName]; ok {
 			ctx := &AutocompleteCtx{
 				events.AutocompleteInteractionCreate{
-					GenericEvent: e.GenericEvent,
+					GenericEvent:            e.GenericEvent,
 					AutocompleteInteraction: e.Interaction.(discord.AutocompleteInteraction),
-					Respond: e.Respond,
+					Respond:                 e.Respond,
 				},
 				h.Log,
 			}
 			if err := a(ctx); err != nil {
 				h.Log.Error("failed to send autocomplete", "err", err)
-			} 
+			}
 		}
 
 	default:
 		h.Log.Warnf("unhandled '%s' interaction", InteractionTypeString[i.Type()])
 	}
-}
-
-func (h *JIHandler) WithLogger(l *log.Logger) *JIHandler {
-	h.Log = l
-	return h
-}
-
-func (h *JIHandler) WithConfig(c Config) *JIHandler {
-	h.Config = c
-	return h
 }
 
 func (h *JIHandler) SetupCommands(client bot.Client, commands []JCommand) {
