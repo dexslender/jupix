@@ -21,19 +21,22 @@ func (c *Ping) Run(ctx *util.JContext) error {
 	if err := ctx.DeferCreateMessage(false); err != nil {
 		return err
 	}
-	d := time.Since(s)
+
+	irest := time.Since(s).Round(time.Millisecond).String()
+	igateway := ctx.Client().Gateway().Latency().Round(time.Millisecond).String()
+
 	_, err := ctx.UpdateInteractionResponse(discord.NewMessageUpdateBuilder().
 		SetEmbeds(discord.NewEmbedBuilder().
 			SetColor(util.DDark).
 			SetAuthorName("Pong!").
 			AddField(
 				"Gateway",
-				ctx.Client().Gateway().Latency().String(),
+				igateway,
 				false,
 			).
 			AddField(
 				"Rest",
-				d.String(),
+				irest,
 				false,
 			).
 			Build(),
@@ -44,5 +47,5 @@ func (c *Ping) Run(ctx *util.JContext) error {
 }
 
 func (t *Ping) Error(ctx *util.JContext, err error) {
-
+	ctx.Log.Error("ping command failed", "err", err)
 }
