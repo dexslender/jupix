@@ -3,7 +3,7 @@
 
 bot:
   # token: 
-  # guild: 
+  guild: 896047288969986160
   setup-commands: false
   global-commands: false
   use-mobile-os: true

@@ -13,7 +13,10 @@ import (
 	"github.com/dexslender/jupix/util"
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
+	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/gateway"
+	"github.com/disgoorg/disgo/handler"
+	"github.com/disgoorg/snowflake/v2"
 )
 
 func New(l *log.Logger, c util.Config) *Jupix {
@@ -27,7 +30,7 @@ type Jupix struct {
 	bot.Client
 	Config   util.Config
 	Log      *log.Logger
-	Handler  *util.JIHandler
+	Handler  handler.Router
 	PUpdater util.PUpdater
 }
 
@@ -39,9 +42,7 @@ func (j *Jupix) SetupBot() {
 		Log:    j.Log,
 	}
 
-	j.Handler = util.NewIHandler().
-		WithLogger(j.Log).
-		WithConfig(j.Config)
+	j.Handler = handler.New()
 
 	if j.Client, err = disgo.New(
 		j.Config.Bot.Token,
@@ -64,7 +65,16 @@ func (j *Jupix) SetupBot() {
 		j.Log.Fatal("Client error: ", err)
 	}
 
-	j.Handler.SetupCommands(j.Client, commands.Commands)
+	cmd := new(commands.Ping)
+	cmd.Init(nil)
+	err = handler.SyncCommands(j, []discord.ApplicationCommandCreate{cmd}, []snowflake.ID{j.Config.Bot.GuildId})
+	if err != nil {
+		j.Log.Error("failed to sync commands", "err", err)
+	}
+
+	j.Handler.Command("/ping", func(e *handler.CommandEvent) error {
+		return e.CreateMessage(discord.MessageCreate{Content: "Hello"})
+	})
 }
 
 func (j *Jupix) StartNLock() {
